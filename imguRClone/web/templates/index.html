@@ -1,0 +1,60 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, viewport-fit=cover">
+    <title>ClipShare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">ClipShare</h1>
+            <p class="max-upload-size">Max upload size: 5MB</p>
+            <form id="upload-form" class="upload-area" method="post" enctype="multipart/form-data">
+                <div class="upload-box" id="drop-zone">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-instruction">Drag & drop files here</p>
+                    <span class="upload-subtext">or</span>
+                    <label for="file-input" class="custom-file-upload">
+                        <span id="file-label">Browse Files</span>
+                    </label>
+                    <input type="file" name="file" id="file-input" multiple accept=".gif">
+                </div>
+                <button type="submit" class="upload-button">
+                    <span class="button-text">Upload</span>
+                    <i class="fas fa-spinner fa-spin loading-icon"></i>
+                </button>
+            </form>
+        </header>
+
+        <div class="media-grid" id="media-grid">
+            {% for file in media_files %}
+            <div class="media-card">
+                <div class="media-wrapper">
+                    <img src="{{ url_for('serve_file', filename=file) }}" alt="{{ file }}" loading="lazy">
+                    <div class="media-overlay">
+                        <a href="{{ url_for('serve_file', filename=file) }}" download class="download-btn">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="media-info">
+                    <p class="filename" title="{{ file }}">{{ file|truncate(20, True) }}</p>
+                    <span class="file-size">{{ file_size(file) }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
